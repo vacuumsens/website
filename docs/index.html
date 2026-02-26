@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VSENS — Modular Vacuum & Temperature Monitoring System</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="logo-bracket">[</span>VSENS<span class="logo-bracket">]</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#temperature">Thermal</a></li>
+      <li><a href="#vacuum">Vacuum</a></li>
+      <li><a href="#power">Power</a></li>
+      <li><a href="#hardware">Hardware</a></li>
+      <li><a href="#dataflow">Data Flow</a></li>
+      <li><a href="#testing">Validation</a></li>
+      <li><a href="#docs">Docs</a></li>
+    </ul>
+    <button id="theme-toggle" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="scan-lines"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">EMBEDDED SYSTEMS · INSTRUMENTATION · v1.0.0</div>
+    <h1 class="hero-title">
+      <span class="title-v">V</span><span class="title-sens">SENS</span>
+    </h1>
+    <p class="hero-subtitle">Modular Vacuum &amp; Temperature Monitoring System<br>for IR Testing Dewars</p>
+
+    <!-- Mini arch diagram in hero -->
+    <div class="hero-arch-mini">
+      <svg viewBox="0 0 700 120" class="hero-svg" xmlns="http://www.w3.org/2000/svg">
+        <!-- Nodes -->
+        <g class="arch-node" style="--d:0">
+          <rect x="10" y="35" width="110" height="50" rx="4"/>
+          <text x="65" y="56" text-anchor="middle">SENSORS</text>
+          <text x="65" y="72" text-anchor="middle" class="sub">Vacuum / Temp</text>
+        </g>
+        <g class="arch-node" style="--d:1">
+          <rect x="160" y="35" width="110" height="50" rx="4"/>
+          <text x="215" y="56" text-anchor="middle">CONTROL PCB</text>
+          <text x="215" y="72" text-anchor="middle" class="sub">PID · Actuation</text>
+        </g>
+        <g class="arch-node" style="--d:2">
+          <rect x="310" y="35" width="110" height="50" rx="4"/>
+          <text x="365" y="56" text-anchor="middle">RASPBERRY PI</text>
+          <text x="365" y="72" text-anchor="middle" class="sub">Edge Layer</text>
+        </g>
+        <g class="arch-node" style="--d:3">
+          <rect x="460" y="35" width="110" height="50" rx="4"/>
+          <text x="515" y="56" text-anchor="middle">CLOUD</text>
+          <text x="515" y="72" text-anchor="middle" class="sub">Logging · Alerts</text>
+        </g>
+        <g class="arch-node" style="--d:4">
+          <rect x="610" y="35" width="80" height="50" rx="4"/>
+          <text x="650" y="56" text-anchor="middle">DASHBOARD</text>
+          <text x="650" y="72" text-anchor="middle" class="sub">Monitor</text>
+        </g>
+        <!-- Arrows + animated pulses -->
+        <line class="arch-line" x1="120" y1="60" x2="158" y2="60"/>
+        <line class="arch-line" x1="270" y1="60" x2="308" y2="60"/>
+        <line class="arch-line" x1="420" y1="60" x2="458" y2="60"/>
+        <line class="arch-line" x1="570" y1="60" x2="608" y2="60"/>
+        <!-- Pulse circles -->
+        <circle class="pulse" r="4" cx="120" cy="60">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="0s">
+            <mpath href="#path1"/>
+          </animateMotion>
+        </circle>
+        <circle class="pulse" r="4" cx="120" cy="60">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s">
+            <mpath href="#path2"/>
+          </animateMotion>
+        </circle>
+        <circle class="pulse" r="4" cx="120" cy="60">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="1s">
+            <mpath href="#path3"/>
+          </animateMotion>
+        </circle>
+        <circle class="pulse" r="4" cx="120" cy="60">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="1.5s">
+            <mpath href="#path4"/>
+          </animateMotion>
+        </circle>
+        <defs>
+          <path id="path1" d="M120,60 L158,60"/>
+          <path id="path2" d="M270,60 L308,60"/>
+          <path id="path3" d="M420,60 L458,60"/>
+          <path id="path4" d="M570,60 L608,60"/>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="hero-cta">
+      <a href="#architecture" class="btn-primary">Explore Architecture</a>
+      <a href="#docs" class="btn-ghost">Documentation</a>
+    </div>
+
+    <!-- Live telemetry mini panel -->
+    <div class="telem-strip">
+      <div class="telem-item">
+        <span class="telem-label">VACUUM</span>
+        <span class="telem-value" id="t-vacuum">1.2e-4</span>
+        <span class="telem-unit">Torr</span>
+        <span class="telem-dot ok"></span>
+      </div>
+      <div class="telem-sep">|</div>
+      <div class="telem-item">
+        <span class="telem-label">TEMP</span>
+        <span class="telem-value" id="t-temp">77.3</span>
+        <span class="telem-unit">K</span>
+        <span class="telem-dot ok"></span>
+      </div>
+      <div class="telem-sep">|</div>
+      <div class="telem-item">
+        <span class="telem-label">HEATER</span>
+        <span class="telem-value" id="t-heater">34</span>
+        <span class="telem-unit">%</span>
+        <span class="telem-dot warn"></span>
+      </div>
+      <div class="telem-sep">|</div>
+      <div class="telem-item">
+        <span class="telem-label">STATUS</span>
+        <span class="telem-value status-ok">NOMINAL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ARCHITECTURE ═══ -->
+<section id="architecture" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>System Architecture</h2>
+    <p class="section-desc">Four-layer design separates hardware, control, edge processing, and cloud services.</p>
+  </div>
+
+  <div class="arch-layers">
+    <!-- Hardware Layer -->
+    <div class="arch-layer" data-layer="hardware">
+      <div class="layer-header" onclick="toggleLayer(this)">
+        <div class="layer-tag">LAYER 0</div>
+        <h3>Hardware Layer</h3>
+        <div class="layer-chips">
+          <span class="chip">Vacuum Sensor</span>
+          <span class="chip">Temp Sensor</span>
+          <span class="chip">Heater Element</span>
+          <span class="chip">Power Stage</span>
+        </div>
+        <div class="layer-toggle">▼</div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-desc">
+          <p>The hardware layer interfaces directly with the physical dewar environment. Vacuum sensors monitor chamber pressure in the high-vacuum regime (10⁻³ – 10⁻⁷ Torr), while cryogenic temperature sensors provide closed-loop feedback to the heater actuation stage. The power stage includes current-limiting circuitry and thermal cutoffs.</p>
+        </div>
+        <div class="layer-blocks">
+          <div class="block">
+            <svg viewBox="0 0 60 60"><rect x="10" y="10" width="40" height="40" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="30" cy="30" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="10" x2="30" y2="22" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="38" x2="30" y2="50" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Vacuum Sensor</span>
+          </div>
+          <div class="block">
+            <svg viewBox="0 0 60 60"><rect x="10" y="20" width="40" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="10" x2="30" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="40" x2="30" y2="50" stroke="currentColor" stroke-width="1.5"/><polyline points="15,30 22,22 29,38 36,22 43,30" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Temp Sensor</span>
+          </div>
+          <div class="block">
+            <svg viewBox="0 0 60 60"><rect x="15" y="15" width="30" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="25" x2="40" y2="25" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="30" x2="40" y2="30" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="35" x2="40" y2="35" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Heater Element</span>
+          </div>
+          <div class="block">
+            <svg viewBox="0 0 60 60"><rect x="5" y="20" width="50" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="25" width="8" height="10" rx="1" fill="currentColor" opacity="0.3"/><rect x="26" y="25" width="8" height="10" rx="1" fill="currentColor" opacity="0.3"/><rect x="40" y="25" width="8" height="10" rx="1" fill="currentColor" opacity="0.3"/></svg>
+            <span>Power Stage</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Layer -->
+    <div class="arch-layer" data-layer="control">
+      <div class="layer-header" onclick="toggleLayer(this)">
+        <div class="layer-tag">LAYER 1</div>
+        <h3>Control Layer</h3>
+        <div class="layer-chips">
+          <span class="chip">Control PCB</span>
+          <span class="chip">PID Loop</span>
+          <span class="chip">Feedback</span>
+          <span class="chip">Vacuum Logic</span>
+        </div>
+        <div class="layer-toggle">▼</div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-desc">
+          <p>A dedicated control board hosts the embedded firmware responsible for PID temperature regulation, vacuum threshold monitoring, and safety state management. Real-time ADC sampling feeds sensor data into control algorithms executing at sub-second loop rates.</p>
+        </div>
+        <div class="layer-blocks">
+          <div class="block"><svg viewBox="0 0 60 60"><rect x="8" y="8" width="44" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="18" width="24" height="24" rx="2" fill="currentColor" opacity="0.15"/><line x1="8" y1="20" x2="18" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="40" x2="18" y2="40" stroke="currentColor" stroke-width="1.5"/><line x1="42" y1="20" x2="52" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="42" y1="30" x2="52" y2="30" stroke="currentColor" stroke-width="1.5"/><line x1="42" y1="40" x2="52" y2="40" stroke="currentColor" stroke-width="1.5"/></svg><span>Control PCB</span></div>
+          <div class="block"><svg viewBox="0 0 60 60"><path d="M10,30 Q20,10 30,30 Q40,50 50,30" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="30" r="3" fill="currentColor"/><circle cx="50" cy="30" r="3" fill="currentColor"/></svg><span>Feedback Loop</span></div>
+          <div class="block"><svg viewBox="0 0 60 60"><text x="30" y="35" text-anchor="middle" font-size="18" fill="currentColor" font-family="monospace">PID</text></svg><span>PID Controller</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edge Layer -->
+    <div class="arch-layer" data-layer="edge">
+      <div class="layer-header" onclick="toggleLayer(this)">
+        <div class="layer-tag">LAYER 2</div>
+        <h3>Edge Layer</h3>
+        <div class="layer-chips">
+          <span class="chip">Raspberry Pi</span>
+          <span class="chip">Aggregation</span>
+          <span class="chip">Logging</span>
+          <span class="chip">Safety Overrides</span>
+        </div>
+        <div class="layer-toggle">▼</div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-desc">
+          <p>The Raspberry Pi edge node aggregates real-time sensor streams, maintains local data logs, and executes safety override logic independent of cloud connectivity. This ensures fail-safe behavior even during network outages. Data is buffered locally and synced upstream when connectivity is restored.</p>
+        </div>
+        <div class="layer-blocks">
+          <div class="block"><svg viewBox="0 0 60 60"><rect x="12" y="8" width="36" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="14" width="24" height="16" rx="2" fill="currentColor" opacity="0.1"/><circle cx="22" cy="36" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="38" cy="36" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="20" y="44" width="8" height="4" rx="1" fill="currentColor" opacity="0.3"/><rect x="32" y="44" width="8" height="4" rx="1" fill="currentColor" opacity="0.3"/></svg><span>Raspberry Pi</span></div>
+          <div class="block"><svg viewBox="0 0 60 60"><rect x="8" y="15" width="44" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="23" x2="52" y2="23" stroke="currentColor" stroke-width="1"/><line x1="8" y1="31" x2="52" y2="31" stroke="currentColor" stroke-width="1"/><line x1="8" y1="39" x2="52" y2="39" stroke="currentColor" stroke-width="1"/></svg><span>Data Logging</span></div>
+          <div class="block"><svg viewBox="0 0 60 60"><polygon points="30,10 50,40 10,40" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="20" x2="30" y2="32" stroke="currentColor" stroke-width="2"/><circle cx="30" cy="36" r="2" fill="currentColor"/></svg><span>Safety Override</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud Layer -->
+    <div class="arch-layer" data-layer="cloud">
+      <div class="layer-header" onclick="toggleLayer(this)">
+        <div class="layer-tag">LAYER 3</div>
+        <h3>Cloud Layer</h3>
+        <div class="layer-chips">
+          <span class="chip">Remote Dashboard</span>
+          <span class="chip">Data Logging</span>
+          <span class="chip">Alert System</span>
+        </div>
+        <div class="layer-toggle">▼</div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-desc">
+          <p>The cloud backend receives telemetry from the edge node, stores time-series sensor data, and provides a remote monitoring dashboard. Configurable alert thresholds trigger notifications when vacuum levels or temperatures exceed operational limits. Historical data is retained for long-term analysis and system diagnostics.</p>
+        </div>
+        <div class="layer-blocks">
+          <div class="block"><svg viewBox="0 0 60 60"><path d="M15,38 Q10,25 22,22 Q24,12 38,15 Q50,12 48,25 Q55,28 50,38 Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>Cloud Server</span></div>
+          <div class="block"><svg viewBox="0 0 60 60"><rect x="8" y="12" width="44" height="36" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/><polyline points="14,36 22,24 30,32 38,20 46,28" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>Dashboard</span></div>
+          <div class="block"><svg viewBox="0 0 60 60"><path d="M30,10 L34,22 L46,22 L36,30 L40,42 L30,34 L20,42 L24,30 L14,22 L26,22 Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>Alert System</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEMPERATURE CONTROL ═══ -->
+<section id="temperature" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Temperature Control System</h2>
+    <p class="section-desc">Closed-loop PID regulation maintains cryogenic setpoint stability within ±0.1 K.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="col-text">
+      <h3>Closed-Loop PID Control</h3>
+      <p>The thermal controller implements a discrete PID algorithm operating on RTD/thermistor feedback. The proportional term provides immediate response, while integral action eliminates steady-state offset and derivative damping suppresses overshoot during cooldown transients.</p>
+      <p>Heater output is duty-cycle modulated via PWM, providing fine-grained power control to the resistive heater element. The feedback path includes sensor filtering to mitigate high-frequency noise.</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">C — PID Update Loop</span></div>
+        <pre><code>float pid_update(PIDState *s, float setpoint, float measured) {
+  float error = setpoint - measured;
+  s->integral += error * s->dt;
+  float derivative = (error - s->prev_error) / s->dt;
+  s->prev_error = error;
+  return s->Kp * error
+       + s->Ki * s->integral
+       + s->Kd * derivative;
+}</code></pre>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec"><span class="spec-label">Setpoint Range</span><span class="spec-val">60 – 320 K</span></div>
+        <div class="spec"><span class="spec-label">Stability Target</span><span class="spec-val">±0.1 K</span></div>
+        <div class="spec"><span class="spec-label">Loop Rate</span><span class="spec-val">10 Hz</span></div>
+        <div class="spec"><span class="spec-label">PWM Frequency</span><span class="spec-val">1 kHz</span></div>
+      </div>
+    </div>
+
+    <div class="col-demo">
+      <h3>Interactive PID Simulator</h3>
+      <div class="pid-controls">
+        <label>Kp <span id="kp-val">1.5</span>
+          <input type="range" id="kp" min="0.1" max="5" step="0.1" value="1.5">
+        </label>
+        <label>Ki <span id="ki-val">0.3</span>
+          <input type="range" id="ki" min="0" max="2" step="0.05" value="0.3">
+        </label>
+        <label>Kd <span id="kd-val">0.1</span>
+          <input type="range" id="kd" min="0" max="1" step="0.02" value="0.1">
+        </label>
+        <label>Setpoint <span id="sp-val">77</span> K
+          <input type="range" id="sp" min="60" max="200" step="1" value="77">
+        </label>
+      </div>
+      <canvas id="pid-canvas" width="480" height="220"></canvas>
+      <div class="pid-legend">
+        <span class="leg-color" style="background:var(--accent)"></span>Temperature
+        <span class="leg-color" style="background:var(--accent2)"></span>Setpoint
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VACUUM MONITORING ═══ -->
+<section id="vacuum" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Vacuum Monitoring</h2>
+    <p class="section-desc">Continuous dewar pressure monitoring with threshold alerting and integrity validation.</p>
+  </div>
+
+  <div class="two-col reverse">
+    <div class="col-text">
+      <h3>Pressure Sensing &amp; Threshold Logic</h3>
+      <p>VSENS monitors dewar vacuum continuously, tracking pressure from atmospheric (~760 Torr) through rough vacuum to high vacuum conditions (&lt;10⁻⁴ Torr). Sensor readings are processed through a configurable threshold hierarchy that triggers graduated alert states.</p>
+      <p>Failure detection logic identifies vacuum loss events (sudden pressure rise), outgassing anomalies (slow drift), and sensor faults (out-of-range or stuck readings). Each failure mode triggers a distinct response protocol.</p>
+
+      <div class="threshold-table">
+        <div class="thresh-row header">
+          <span>Pressure Range</span><span>State</span><span>Action</span>
+        </div>
+        <div class="thresh-row">
+          <span>&lt; 1×10⁻⁴ Torr</span><span class="state ok">NOMINAL</span><span>Normal ops</span>
+        </div>
+        <div class="thresh-row">
+          <span>1×10⁻⁴ – 10⁻³</span><span class="state warn">WARNING</span><span>Log + alert</span>
+        </div>
+        <div class="thresh-row">
+          <span>&gt; 1×10⁻³ Torr</span><span class="state crit">CRITICAL</span><span>Heater cutoff</span>
+        </div>
+        <div class="thresh-row">
+          <span>Sensor fault</span><span class="state fault">FAULT</span><span>Safe state</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-demo">
+      <h3>Live Pressure Readout (Simulated)</h3>
+      <div class="vacuum-gauge">
+        <div class="gauge-ring">
+          <svg viewBox="0 0 200 200" class="gauge-svg">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="var(--border)" stroke-width="8"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="var(--accent)" stroke-width="8"
+              stroke-dasharray="502" stroke-dashoffset="502" id="gauge-arc"
+              stroke-linecap="round" transform="rotate(-90 100 100)"/>
+            <text x="100" y="90" text-anchor="middle" class="gauge-exp-text" id="gauge-exp">1.2</text>
+            <text x="100" y="112" text-anchor="middle" class="gauge-unit-text">×10⁻⁴ Torr</text>
+            <text x="100" y="130" text-anchor="middle" class="gauge-state-text" id="gauge-state">NOMINAL</text>
+          </svg>
+        </div>
+        <div class="gauge-history">
+          <canvas id="vac-canvas" width="280" height="100"></canvas>
+          <div class="vac-label">Pressure history (60s)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ POWER & SAFETY ═══ -->
+<section id="power" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>Power &amp; Safety</h2>
+    <p class="section-desc">Multi-layer protection with hardware and firmware fail-safe states.</p>
+  </div>
+
+  <div class="safety-grid">
+    <div class="safety-card reveal-child">
+      <div class="safety-icon">
+        <svg viewBox="0 0 48 48"><path d="M24 4L8 12v14c0 9.4 6.8 18.2 16 20.5C33.2 44.2 40 35.4 40 26V12L24 4z" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="16,24 22,30 32,18" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      </div>
+      <h3>Current Limiting</h3>
+      <p>Hardware current limit resistors and PTC fuses protect the heater driver stage from overcurrent conditions. Software-side duty cycle clamps enforce maximum power delivery independent of firmware faults.</p>
+    </div>
+    <div class="safety-card reveal-child">
+      <div class="safety-icon">
+        <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke="currentColor" stroke-width="2"/><line x1="24" y1="14" x2="24" y2="26" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="32" r="2" fill="currentColor"/></svg>
+      </div>
+      <h3>Thermal Cutoff</h3>
+      <p>A dedicated thermal fuse in series with the heater circuit opens irreversibly if element temperature exceeds the maximum rated value. A resettable PTC provides secondary protection for transient overcurrent events.</p>
+    </div>
+    <div class="safety-card reveal-child">
+      <div class="safety-icon">
+        <svg viewBox="0 0 48 48"><rect x="8" y="8" width="32" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="2"/><polyline points="22,18 28,24 22,30" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      </div>
+      <h3>Fail-Safe States</h3>
+      <p>On any unhandled fault condition, the system transitions to a defined safe state: heaters disabled, all outputs driven low, and a fault code written to non-volatile storage. Recovery requires explicit operator acknowledgment.</p>
+    </div>
+    <div class="safety-card reveal-child">
+      <div class="safety-icon">
+        <svg viewBox="0 0 48 48"><path d="M24 4 L40 12 L40 28 L24 44 L8 28 L8 12 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="24" y1="16" x2="24" y2="28" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="34" r="2" fill="currentColor"/></svg>
+      </div>
+      <h3>Edge Override Logic</h3>
+      <p>The Raspberry Pi edge node monitors the control MCU via a watchdog heartbeat. If the MCU becomes unresponsive, the edge node can assert a hardware reset line or activate emergency heater inhibit independently of firmware state.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HARDWARE STACK ═══ -->
+<section id="hardware" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Hardware Stack</h2>
+    <p class="section-desc">Component selection prioritizing reliability and compatibility in cryogenic environments.</p>
+  </div>
+
+  <div class="hw-cards">
+    <div class="hw-card">
+      <div class="hw-num">01</div>
+      <h4>Vacuum Sensor</h4>
+      <p>Pirani / cold cathode combination gauge covering atmospheric through high-vacuum regime. I²C/SPI digital interface.</p>
+      <div class="hw-spec">Range: ATM – 10⁻⁷ Torr</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-num">02</div>
+      <h4>Temperature Sensor</h4>
+      <p>Cryogenic RTD or silicon diode sensor calibrated for 4 – 400 K range. Low self-heating design minimizes measurement error.</p>
+      <div class="hw-spec">Accuracy: ±0.05 K</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-num">03</div>
+      <h4>Control MCU</h4>
+      <p>ARM Cortex-M4 based microcontroller with hardware FPU for PID computation. 12-bit ADC with differential input configuration.</p>
+      <div class="hw-spec">Loop rate: 10 Hz</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-num">04</div>
+      <h4>Raspberry Pi</h4>
+      <p>Raspberry Pi 4 Model B serving as edge processing node. UART/I²C interface to control MCU, WiFi/Ethernet for cloud uplink.</p>
+      <div class="hw-spec">OS: Raspberry Pi OS Lite</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-num">05</div>
+      <h4>Heater Driver</h4>
+      <p>N-channel MOSFET power stage with gate driver and current sense resistor. PWM-controlled, rated for continuous dewar heater load.</p>
+      <div class="hw-spec">PWM: 1 kHz, 0–100%</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-num">06</div>
+      <h4>Power Supply</h4>
+      <p>Multi-rail bench or rack-mount PSU providing isolated heater supply and logic supply. Hot-swap capability for field servicing.</p>
+      <div class="hw-spec">Rails: 5 V, 12 V, 24 V</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DATA FLOW ═══ -->
+<section id="dataflow" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Data Flow</h2>
+    <p class="section-desc">End-to-end telemetry pipeline from physical sensors to cloud dashboard.</p>
+  </div>
+
+  <div class="flow-container">
+    <div class="flow-svg-wrap">
+      <svg id="flow-svg" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- Nodes -->
+        <g class="fnode" id="fn0">
+          <rect x="20" y="90" width="130" height="80" rx="6"/>
+          <text x="85" y="122">SENSORS</text>
+          <text x="85" y="140" class="sub">Vacuum · Temp</text>
+          <text x="85" y="156" class="sub">10 Hz polling</text>
+        </g>
+        <g class="fnode" id="fn1">
+          <rect x="210" y="90" width="130" height="80" rx="6"/>
+          <text x="275" y="122">CONTROL PCB</text>
+          <text x="275" y="140" class="sub">ADC · PID · PWM</text>
+          <text x="275" y="156" class="sub">UART @ 115200</text>
+        </g>
+        <g class="fnode" id="fn2">
+          <rect x="400" y="90" width="130" height="80" rx="6"/>
+          <text x="465" y="122">RASPBERRY PI</text>
+          <text x="465" y="140" class="sub">Aggregation</text>
+          <text x="465" y="156" class="sub">Local DB · Safety</text>
+        </g>
+        <g class="fnode" id="fn3">
+          <rect x="590" y="90" width="130" height="80" rx="6"/>
+          <text x="655" y="122">CLOUD</text>
+          <text x="655" y="140" class="sub">MQTT / REST</text>
+          <text x="655" y="156" class="sub">Time-series DB</text>
+        </g>
+        <g class="fnode" id="fn4">
+          <rect x="780" y="90" width="100" height="80" rx="6"/>
+          <text x="830" y="122">DASHBOARD</text>
+          <text x="830" y="140" class="sub">WebSocket</text>
+          <text x="830" y="156" class="sub">Live charts</text>
+        </g>
+
+        <!-- Connections -->
+        <path class="fpath" id="fp0" d="M150,130 L208,130"/>
+        <path class="fpath" id="fp1" d="M340,130 L398,130"/>
+        <path class="fpath" id="fp2" d="M530,130 L588,130"/>
+        <path class="fpath" id="fp3" d="M720,130 L778,130"/>
+
+        <!-- Labels on arrows -->
+        <text class="farrow-label" x="178" y="122">SPI/I²C</text>
+        <text class="farrow-label" x="368" y="122">UART</text>
+        <text class="farrow-label" x="558" y="122">TCP/IP</text>
+        <text class="farrow-label" x="748" y="122">WS</text>
+
+        <!-- Animated data packets -->
+        <circle class="packet" r="5" id="pkt0"/>
+        <circle class="packet" r="5" id="pkt1"/>
+        <circle class="packet" r="5" id="pkt2"/>
+        <circle class="packet" r="5" id="pkt3"/>
+
+        <!-- Downward feedback line from RPi to Control -->
+        <path class="fpath-feedback" d="M465,170 L465,210 L275,210 L275,170"/>
+        <text class="farrow-label" x="360" y="225">Safety Override</text>
+      </svg>
+    </div>
+
+    <!-- Terminal log window -->
+    <div class="terminal">
+      <div class="term-header">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span class="term-title">vsens-edge:/var/log/vsens.log</span>
+      </div>
+      <div class="term-body" id="term-body">
+        <div class="term-line"><span class="term-ts">2025-03-12 09:41:03.221</span> <span class="term-tag info">INFO</span>  System startup complete</div>
+        <div class="term-line"><span class="term-ts">2025-03-12 09:41:03.445</span> <span class="term-tag info">INFO</span>  Sensor init: vacuum OK, temp OK</div>
+        <div class="term-line"><span class="term-ts">2025-03-12 09:41:04.001</span> <span class="term-tag data">DATA</span>  P=1.24e-4 Torr, T=77.31 K, PWM=34%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTING ═══ -->
+<section id="testing" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>Testing &amp; Validation</h2>
+    <p class="section-desc">Characterization results from bench-level and system-level validation runs.</p>
+  </div>
+
+  <div class="test-grid">
+    <div class="test-card">
+      <h4>Temperature Stability</h4>
+      <canvas id="stab-canvas" width="320" height="160"></canvas>
+      <p class="test-note">Setpoint hold at 77 K over 30-minute interval. Peak-to-peak deviation &lt;0.08 K after initial transient.</p>
+    </div>
+    <div class="test-card">
+      <h4>Vacuum Drift</h4>
+      <canvas id="vac-drift-canvas" width="320" height="160"></canvas>
+      <p class="test-note">Baseline pressure drift over 4-hour soak. Nominal dewar maintains &lt;3×10⁻⁵ Torr throughout.</p>
+    </div>
+    <div class="test-card">
+      <h4>PID Step Response</h4>
+      <canvas id="step-canvas" width="320" height="160"></canvas>
+      <p class="test-note">10 K step setpoint change. Rise time ~45 s, overshoot &lt;2%, settling within 120 s.</p>
+    </div>
+  </div>
+
+  <div class="test-notes reveal-child">
+    <h4>Environmental Testing Notes</h4>
+    <p>All hardware was tested across the full expected temperature range with focus on connector reliability and PCB performance under repeated thermal cycling. Firmware state machine was validated against injected fault conditions including sensor disconnection, communication timeout, and simulated vacuum loss events. No undefined behavior was observed during fault injection testing.</p>
+  </div>
+</section>
+
+<!-- ═══ DOCUMENTATION ═══ -->
+<section id="docs" class="section reveal">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>Documentation</h2>
+    <p class="section-desc">Source files, schematics, firmware, and design artifacts.</p>
+  </div>
+
+  <div class="doc-cards">
+    <a href="#" class="doc-card">
+      <div class="doc-icon">
+        <svg viewBox="0 0 48 48"><path d="M8 8h24l8 8v28H8V8z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M32 8v8h8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="2"/><line x1="16" y1="32" x2="28" y2="32" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <h4>GitHub Repository</h4>
+      <p>Full source code, firmware, and build system. Issues and PRs welcome.</p>
+      <span class="doc-link">github.com/vsens/vsens ↗</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">
+        <svg viewBox="0 0 48 48"><rect x="8" y="8" width="32" height="32" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="22" x2="22" y2="22" stroke="currentColor" stroke-width="1.5"/><rect x="22" y="26" width="10" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </div>
+      <h4>Schematics</h4>
+      <p>KiCad project files and exported PDFs for control board and power stage.</p>
+      <span class="doc-link">hardware/schematics/ ↗</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">
+        <svg viewBox="0 0 48 48"><rect x="8" y="12" width="32" height="28" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="16,24 22,18 28,26 34,20" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="32" x2="32" y2="32" stroke="currentColor" stroke-width="1.5"/></svg>
+      </div>
+      <h4>Firmware</h4>
+      <p>Embedded C firmware for the control MCU. FreeRTOS-based task architecture.</p>
+      <span class="doc-link">firmware/src/ ↗</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">
+        <svg viewBox="0 0 48 48"><rect x="8" y="8" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="26" y="8" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="8" y="26" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="26" y="26" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <h4>CAD Models</h4>
+      <p>Mechanical enclosure and bracket designs. STEP files for integration reference.</p>
+      <span class="doc-link">hardware/cad/ ↗</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo"><span class="logo-bracket">[</span>VSENS<span class="logo-bracket">]</span></div>
+    <div class="footer-info">Modular Vacuum &amp; Temperature Monitoring System · Embedded Systems Project</div>
+    <div class="footer-status">
+      <span class="telem-dot ok"></span> All systems nominal
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
