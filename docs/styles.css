@@ -26,6 +26,7 @@
   --radius: 6px;
   --mono: 'IBM Plex Mono', 'Share Tech Mono', monospace;
   --sans: 'Rajdhani', sans-serif;
+  --brand: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 [data-theme="light"] {
@@ -94,11 +95,12 @@ body {
 }
 
 .nav-logo {
-  font-family: var(--mono);
+  font-family: var(--brand);
+  font-style: italic;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--accent);
+  color: var(--text);
   white-space: nowrap;
 }
 
@@ -201,7 +203,8 @@ body {
 }
 
 .hero-title {
-  font-family: var(--mono);
+  font-family: var(--brand);
+  font-style: italic;
   font-size: clamp(4rem, 16vw, 9rem);
   font-weight: 700;
   line-height: 1;
@@ -1137,9 +1140,10 @@ footer {
 }
 
 .footer-logo {
-  font-family: var(--mono);
+  font-family: var(--brand);
+  font-style: italic;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text);
   letter-spacing: 0.1em;
 }
 

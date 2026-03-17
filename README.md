@@ -10,9 +10,11 @@ Static site deployable directly to GitHub Pages. No build step required.
 
 ```
 vsens/
-├── index.html   # Main site
-├── styles.css   # All styles
-├── script.js    # Interactivity, simulations, animations
+├── docs/
+│   ├── index.html   # Main site
+│   ├── styles.css   # All styles
+│   ├── script.js    # Interactivity, simulations, animations
+│   └── formatting-metadata.json  # Formatting and brand tokens
 └── README.md
 ```
 
@@ -29,7 +31,8 @@ vsens/
    └── docs/
        ├── index.html
        ├── styles.css
-       └── script.js
+       ├── script.js
+       └── formatting-metadata.json
    ```
 3. Go to **Settings → Pages**
 4. Source: **Deploy from branch**
